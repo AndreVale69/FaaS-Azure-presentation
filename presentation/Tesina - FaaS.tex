@@ -1,0 +1,494 @@
+\documentclass[a4paper]{article}
+\usepackage[T1]{fontenc}			% pacchetto per \chapter
+\usepackage[italian]{babel}
+\usepackage[italian]{isodate}  		% formato delle date in italiano
+\usepackage{graphicx}				% gestione delle immagini
+\usepackage{amsfonts}
+\usepackage{booktabs}				% tabelle di qualità superiore
+\usepackage{amsmath}				% pacchetto matematica
+\usepackage{enumitem}				% gestione delle liste
+\usepackage{pifont}					% pacchetto con elenchi carini
+\usepackage{listings}				% pacchetto per i codici
+\usepackage[x11names]{xcolor}		% pacchetto colori RGB
+% Link ipertestuali per l'indice
+\usepackage{xcolor}
+\usepackage[linkcolor=black, citecolor=blue, urlcolor=cyan]{hyperref}
+\hypersetup{
+	colorlinks=true
+}
+
+\newcommand{\longline}{\noindent\rule{\textwidth}{0.4pt}}
+\newcommand{\dquotes}[1]{``#1''}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstdefinelanguage{JavaScript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{codegreen}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+\lstset{
+	language=JavaScript,
+	backgroundcolor=\color{lightgray},
+	extendedchars=true,
+	basicstyle=\footnotesize\ttfamily,
+	showstringspaces=false,
+	showspaces=false,
+	numbers=left,
+	numberstyle=\footnotesize,
+	numbersep=9pt,
+	tabsize=2,
+	breaklines=true,
+	showtabs=false,
+	captionpos=b
+}
+
+\lstset{style=mystyle}
+
+%\usepackage{showframe}				% visualizzazione bordi
+%\usepackage{showkeys}				% visualizzazione etichetta
+
+\begin{document}
+	\author{VR443470 - Valentini Andrea}
+	\title{Università degli studi di Verona \\
+		\:\\
+		Tesina su FaaS (Function-as-a-Service)}
+	\date{\printdayoff\today}
+	\maketitle
+	
+	\newpage
+	
+	% indice
+	\tableofcontents
+	
+	\newpage
+	
+	\section{Introduzione}
+	
+	Con l'avanzare della tecnologia e del \emph{cloud computing}, è aumentata sempre di più la richiesta di servizi online che consentissero di utilizzare calcolatori già pronti e con grandi disponibilità di calcolo.
+	
+	La crescita del \emph{cloud computing} è stata esponenziale nell'ultimo decennio, soprattutto anche grazie, purtroppo, alla pandemia del COVID-19. Tant'è che il CEO di Microsoft, Satya Nadella, disse:
+	\begin{center}
+		\dquotes{\emph{We’ve seen two years of digital transformation in two months.}}
+	\end{center}
+	
+	\longline
+	
+	% https://www.ibm.com/topics/faas#What+is+FaaS%3F
+	% https://www.redhat.com/en/topics/cloud-native-apps/what-is-faas#overview
+	\subsection{Che cos'è FaaS}
+	
+	Function-as-a-Service (FaaS) è una tipologia (\emph{event-driven}) di servizio \emph{cloud computing} che consente ai programmatori di sviluppare, eseguire e gestire pacchetti di applicazioni come se fossero funzioni, senza preoccuparsi della manutenzione di una propria infrastruttura.
+	
+	Tipicamente, l'\emph{hosting} di un'applicazione software su Internet richiede: la gestione di un server virtuale o fisico e la gestione di un sistema operativo. Con FaaS, viene tutto gestito in automatico dal \emph{cloud service provider}.
+	
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/faas-1.jpg}
+	\end{figure}
+	
+	\noindent
+	I vantaggi di questa tecnologia sono molteplici e verranno spiegati più avanti. Per esempio, i programmatori possono concentrarsi solamente sul codice delle loro applicazioni.
+	
+	\newpage
+	
+	% https://www.ibm.com/topics/faas#FaaS+vs.+serverless
+	% https://www.redhat.com/en/topics/cloud-native-apps/what-is-faas#faas-and-serverless
+	\subsection{FaaS e serverless}
+	
+	\emph{Serverless} è un modello di sviluppo ed esecuzione di applicazioni di \emph{cloud computing}, il quale consente ai programmatori di costruire ed eseguire il codice dell'applicazione senza preoccuparsi dei server o del \emph{backend} dell'infrastruttura.
+	
+	Nonostante spesso le persone scambino i modelli serverless e FaaS tra di loro, la verità è che sono due concetti diversi ed è più corretto dire che FaaS è un sottoinsieme dei modelli serverless.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/AWS-Serverless-1.pdf}
+		\caption{Esempio dei vari servizi \emph{serverless} offerti da Amazon.}
+		\label{fig: AWS serverless services}
+	\end{figure}
+	
+	\noindent
+	Il modello \emph{serverless} è focalizzato su \textbf{qualsiasi} categoria di servizio, come la computazione, l'archiviazione, i database, la messaggistica, le \emph{api gateways}\footnote{Un \emph{api gateway} è uno strumento di gestione delle API che si trova tra un client e una raccolta di servizi back-end.}, etc. In tutti queste categorie, la configurazione, la gestione e il costo effettivo dei server, è nascosto all'utente finale.
+	
+	La figura~\ref{fig: AWS serverless services} dovrebbe dimostrare come il servizio FaaS sia solo un sottoinsieme dell'enorme modello \emph{serverless}. Amazon, come verrà anche approfondito più avanti, come servizio FaaS propone AWS Lambda.\newline
+	
+	Il modello Function-as-a-Service può essere considerato la tecnologia più centrale nell'architettura \emph{serverless}. In altre parole è il cuore pulsante. FaaS è focalizzato sul paradigma \emph{event-driven} (orientato agli eventi), dove il codice dell'applicazione, o del \emph{container}, viene eseguito solo in risposta a determinati eventi o richieste.\newpage
+	
+	\section{Aziende che offrono un servizio FaaS}
+	
+	\subsection{IBM: cloud functions}
+	
+	\subsubsection{Panoramica}
+	
+	L'azienda IBM offre come servizio FaaS \href{https://cloud.ibm.com/functions/}{IBM Cloud Functions} e si basa su Apache OpenWhisk\footnote{Apache OpenWhisk è una piattaforma open source che consente di eseguire funzioni in risposta ad eventi.}. 	
+	
+	Cloud Functions è diverso dalle tecnologie di calcolo tradizionali; si paga solo per il tempo per cui il codice sta soddisfacendo le richieste, arrotondato al 100ms più vicino. Questo significa che si potrebbero vedere dei notevoli risparmi rispetto ad altre tecnologie come le macchine virtuali e i contenitori, che probabilmente non sono utilizzati al 100\% pur continuando a utilizzare memoria sul sistema del provider cloud.
+	
+	Cloud Functions viene fatturato al secondo per gigabyte di memoria. Questo significa che è possibile ulteriormente ridurre i costi allocando solo la quantità di memoria necessaria perché le funzioni svolgano il loro lavoro.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=.6\textwidth]{img/IBM-1.pdf}
+		\caption{Funzionamento del calcolo del costo di IBM Cloud Functions.}
+	\end{figure}
+	
+	\begin{table}[!htp]
+		\centering
+		\begin{tabular}{@{} l l l l @{}}
+			\toprule
+			Tempo esec. azione & Memoria dell'azione & Esecuzioni al mese & Costo al mese \\
+			\midrule
+			500ms	& 128MB & 5.000.000		& Gratuito \\
+			500ms	& 256MB & 5.000.000		& \$4,00 \\
+			500ms	& 512MB & 5.000.000		& \$15,10 \\
+			1.000ms	& 128MB & 10.000.000	& \$15,10 \\
+			1.000ms	& 256MB & 10.000.000	& \$37,31 \\
+			1.000ms	& 512MB & 10.000.000	& \$81,72 \\
+			\bottomrule
+		\end{tabular}
+		\caption{Stima di costi a seconda dell'utilizzo}
+	\end{table}
+	
+	\subsubsection{Caso studio: GreenQ}
+	
+	Tra tutti i casi studio che propone l'azienda IBM sul proprio sito, ne esistono 3 che riguardano singolarmente la tecnologia FaaS: GreenQ, Articoolo e SiteSpirit. Si approfondisce l'azienda GreenQ.\footnote{Link completo dell'articolo: \href{https://www.ibm.com/case-studies/greenq-ltd}{link}}\newline
+	
+	\noindent
+	La GreenQ Ltd. è un'azienda americana (Santa Monica, California) che ha l'obbiettivo di portare la tecnologia IoT (Internet of Things) al servizio dei municipi in cui gestiscono i rifiuti delle città americane.
+	
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=.5\textwidth]{img/GreenQ-logo.pdf}
+	\end{figure}
+	
+	\noindent
+	\textbf{\emph{La sfida da superare.}} I municipi spendono cifre significative per raccogliere i rifiuti, ma spesso potrebbero essere ammortizzati eseguendo un'ottimizzazione dei processi.
+	
+	L'azienda GreenQ sfrutta tale gap per introdurre una piattaforma IoT che consenta di salvare dati, come il tempo di ritiro, la posizione e il peso del cestino, grazie a schede hardware sui furgoni dell'immondizia. Questi dispositivi inviavano i dati all'azienda GreenQ per monitorarli e analizzarli così da migliorare l'organizzazione delle gestione del ritiro dei rifiuti. Tuttavia, dopo il lancio di un prototipe, l'azienda ha iniziato a ripensare alla sua architettura e infrastruttura.
+	
+	Edy Candel, il CTO (\emph{Chief Technology Officier}) e cofondatore di GreenQ, disse: \dquotes{\emph{Dopo aver assunto i primi clienti, ci rendemmo conto che stavamo spendendo tanto tempo nel gestire le nostre virtual machines e aggiungere potenza computazionale. Vedemmo che la nostra infrastruttura aveva un numero di richieste che dipendevano dal numero di clienti e camion che stavano lavorando, quindi ci rendemmo conto che era difficile ottenere la scalabilità desiderata}}.\newline
+	
+	\noindent
+	\textbf{\emph{La trasformazione.}} GreenQ entra a far parte del programma \dquotes{IBM Alpha Zone Accelerator} creato appositamente per le \emph{startup}. Così facendo, viene eseguita una migrazione dalla vecchia architettura alla FaaS di IBM, ovvero la IBM Cloud Functions.
+	
+	Dato il paradigma event-driven, ad ogni pezzo dell'applicazione di GreenQ viene assegnato un trigger a seconda dell'azione scatenata o dell'insieme di azioni scatenate, eliminando in questo modo l'attivazione manuale nel \emph{workflow}. Per esempio, quando il sensore del furgone dell'immondizia raccoglie dati da un cestino dei rifiuti durante il prelievo, l'evento \emph{triggera} la soluzione adottata da GreenQ per controllare, analizzare e salvare automaticamente le informazioni.
+	
+	Ultimamente, la piattaforma \emph{cloud-based} fornita ai municipi e ad altre organizzazioni di raccolta dei rifiuti, è stata migliorata inserendo una \emph{dashboard} in cui è possibile visualizzare in tempo reale: la posizione e il percorso dei furgoni della spazzatura, inviare e ricevere notifiche, e analizzare i dati per migliorare i servizi. Per continuare ad evolvere la sua offerta, GreenQ prevede di incorporare altre tecnologie di IBM, come IBM Watson Visual Recognition, per catturare e tradurre informazioni visive sui percorsi di ritiro dei clienti.
+	
+	\subsection{Amazon: AWS Lambda}
+	
+	\subsubsection{Panoramica}
+	
+	L'azienda Amazon offre come servizio FaaS \href{https://aws.amazon.com/lambda/?nc2=h_ql_prod_fs_lbd}{AWS Lambda}. Inoltre, Amazon offre più di 200 servizi AWS e \emph{Software-as-a-Service} (SaaS) che consentono di \emph{triggerare} AWS Lambda.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/AWS-Lambda-1.png}
+		\caption{Esempio di utilizzo di AWS Lambda. Utilizzando il servizio di Data Store chiamato Amazon S3 è possibile salvare una foto carica da un utente, \emph{triggerare} AWS Lambda e quest'ultimo eseguire l'azione di ridimensionamento dell'immagine.}
+	\end{figure}
+	
+	\noindent
+	Su AWS Lambda è possibile scegliere se eseguire le funzioni su processori x86 o architetture Arm. Il prezzo varia a seconda delle architetture e quindi si rimanda al sito ufficiale: \url{https://aws.amazon.com/it/lambda/pricing/}
+	
+	\longline
+	
+	\subsubsection{Caso studio: Coca-Cola}
+	
+	Tra la marea di casi studio proposti dall'azienda Amazon, qua di seguito viene proposto quello di Coca-Cola Company.\footnote{Link completo dell'articolo: \href{https://aws.amazon.com/solutions/case-studies/coca-cola-freestyle/?nc1=h_ls}{link}}\newline
+	
+	\noindent
+	La Coca-Cola Company è un'azienda statunitense (Atlanta, Georgia) ed è una delle più grandi aziende produttrici e distributrici di bevande analcoliche e concentrati di sciroppi a livello mondiale.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=.58\textwidth]{img/Coca-Cola-1.png}
+		\caption{Logo Coca-Cola Company.}
+	\end{figure}\newpage
+	
+	\noindent
+	\textbf{\emph{La sfida da superare.}} Nel 2020, il mondo è stato colpito da una pandemia chiamata COVID-19. Questa tragedia ha provocato un grosso cambiamento nel comportamento degli esseri umani e l'azienda Coca-Cola stava cercando di migliorare i suoi distributori chiamati \dquotes{Coca-Cola Freestyle}.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=.3\textwidth]{img/Coca-Cola-2.jpg}
+		\caption{Coca-Cola Freestyle.}
+	\end{figure}
+	
+	\noindent
+	Thomas Stubbs, vie presidente dell'ingegneria e dell'innovazione al \emph{Coca-Cola Freestyle Equipment Innovation Center}, ha affermato: \dquotes{\emph{Tutti i dispenser Coca-Cola sono sicuri grazie ad una minuziosa cura e pulizia. Ma in questi periodi incerti, Coca-Cola vuole proporre ai clienti una nuova opzione: un'esperienza touchless}}. Per \emph{touchless} si intende un distributore che non necessita di essere toccato, quindi limitando al massimo il contatto tra le persone.\newline
+	
+	\noindent
+	\textbf{\emph{La realizzazione.}} Per realizzare l'idea di Coca-Cola, la bassa latenza (\emph{low latency}) era la chiave essenziale. Per questo motivo, Amazon ha pensato di adottare la sua AWS \emph{serverless architecture} al nuovo distributore \emph{contactless} così da far scegliere la bibita desiderata ai clienti tramite il proprio \emph{smartphone} in pochi secondi \textbf{senza} il bisogno di scaricare un'applicazione o avere un account!
+	
+	Il team Freestyle ha creato una web app \emph{serverless} che si integrava con i distributori Coca-Cola Freestyle, in appena 4 mesi.\newpage
+	
+	\subsection{Google: cloud functions}
+	
+	\subsubsection{Panoramica}
+	
+	L'azienda Google offre come servizio FaaS \href{https://cloud.google.com/functions/}{Google Cloud Functions}. Nel complesso sembra un servizio come gli altri, ma il sito fornisce una grande documentazione facilmente consultabile e una serie di casi d'uso.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/Google-1.pdf}
+		\caption{Esempio di caso d'uso: integrazione con servizi di terze parti e APIs.}
+	\end{figure}
+	
+	\noindent
+	Il prezzo varia a seconda dell'utilizzo che se ne fa: \url{https://cloud.google.com/functions/pricing}
+	
+	\longline
+	
+	\subsubsection{Caso studio: Commerzbank}
+	
+	Tra i vari casi studio proposti da Google, qua di seguito viene approfondito Commerzbank.\footnote{Link completo dell'articolo: \href{https://cloud.google.com/customers/commerzbankag}{link}}\newline
+	
+	\noindent
+	La Commerzbank è la quarta più grande banca della Germania, dopo Deutsche Bank, DZ Bank e KfW, con sede a Francoforte sul Meno, fondata nel 1870 ad Amburgo.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/Googe-2.jpg}
+		\caption{Foto della sede tedesca Commerzbank.}
+	\end{figure}\newpage
+	
+	\noindent
+	\textbf{\emph{La sfida da superare.}} L'83\% dei servizi finanziari, secondo Google Cloud survey, vengono sviluppati utilizzando servizi cloud. Per alcune banche, tra cui Commerzbank, la sicurezza è un aspetto fondamentale e questo cambiamento ha influito su tale aspetto. Le aziende che forniscono servizi finanziari devono maneggiare una grande quantità di dati sensibili che non possono essere compromessi.
+	
+	Gli standard di sicurezza che sono cresciuti negli ultimi dieci anni, non possono essere spostati in massa all'interno del cloud, ma devono essere ridisegnati.
+	\begin{center}
+		\dquotes{\emph{Un fattore critico della nostra adozione della tecnologia cloud, è sempre stato le varie funzionalità che il cloud porta con sé quando deve processare una grande quantità di dati, per esempio, per ricavare informazioni dettagliate. Al momento del salvataggio in cloud, abbiamo bisogno di essere sicuri che i dati siano protetti e rispettino gli stretti standard di sicurezza. Questo è il motivo per cui abbiamo scelto Google Cloud.}}\newline
+		
+		\noindent
+		- \emph{Christian Gorke, Head of Cyber Center of Excellence, Commerzbank}
+	\end{center}\:\newline
+	
+	\noindent
+	\textbf{\emph{La realizzazione.}} Il nuovo sistema di sicurezza implementato da Google è implementato all'interno (\emph{built-in}). Questo si traduce in un'automatizzazione in larga scala, poiché i dipendenti non dovranno preoccuparsi di configurare software complessi come firewall, ma sarà tutto automatizzato da Google. Questo approccio viene chiamato \emph{invisible security}.
+	
+	Gorke spiega come funziona: \dquotes{La sicurezza invisibile di Commerzbank è un approccio diviso in 4 passaggi. Primo, viene azionato Cloud Logging e Asset Inventory per ottenere una panoramica completa di tutte le nostre risorse nel cloud. Dopodiché, si implementa un filtro e uno strato d'azione basato sul modello Pub/Sub e BigQuery, i quali ci consentono di definire programmaticamente un ampio range di sicurezza per i vari casi d'uso. Successivamente, si valutano le misure corrette di sicurezza basate sugli eventi scatenati utilizzando Cloud Functions e Cloud Run, a seconda sempre dei casi d'uso. Dopo troviamo le misure di sicurezza corretti con BigQuery e Cloud Functions. Infine, eseguiamo un report dei risultati al Security Command Center.}
+	
+	La soluzione di automatizzazione dei livelli di sicurezza di Google, consente ai dipendenti di Commerzbank di focalizzarsi sul proprio lavoro invece che sui possibili problemi di sicurezza.\newpage
+	
+	\subsection{Microsoft: Azure functions}
+	
+	\subsubsection{Panoramica}
+	
+	L'azienda Microsoft offre come servizio FaaS \href{https://azure.microsoft.com/en-us}{Microsoft Azure}. Sul proprio sito, Microsoft presenta le varie potenzialità del proprio servizio. Inoltre, Microsoft afferma che il proprio servizio è 5 volte più economico del concorrente Amazon: \url{https://azure.microsoft.com/en-us/pricing/}
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/Microsoft-1.pdf}
+		\caption{Infrastruttura di Azure.}
+	\end{figure}\newpage
+	
+	\subsubsection{Caso studio: Fujitsu}
+	
+	Tra le aziende più famose con cui ha lavorato Microsoft, si presenta qua di seguito Fujitsu.\footnote{Link completo dell'articolo: \href{https://customers.microsoft.com/en-GB/story/1533527200966057333-fujitsu-azure-partner-professional-services-business-critical}{link}}\newline
+	
+	\noindent
+	Fujitsu è un'azienda giapponese con sede a Tokyo e Kawasaki. È uno dei maggiori fornitori mondiali di prodotti e servizi per l'\emph{information technology}, dai personal computer, midrange, grandi server e sistemi di storage, fino al software.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/Fujitsu-1.jpg}
+		\caption{Logo di Fujitsu.}
+	\end{figure}
+	
+	\noindent
+	\textbf{\emph{La sfida da superare.}} Recentemente, l'azienda Fujitsu ha adottato un nuovo tipo di \emph{business brand} chiamato Fujitsu Uvance. Il nuovo \emph{brand} si focalizza su come Fujitsu aiuta i suoi clienti a risolvere le sfide della società, utilizzando le sue funzionalità tecnologiche e l'esperienza del \emph{problem-solving}.
+	
+	Con il lancio di questa nuova sfida, Fujitsu sapeva che doveva rimodernare la sua presenza online per migliorare il supporto. Dato che la presenza online è un sistema di business critico, Fujitsu si rese conto che il suo sistema era da rinnovare a causa dei continui aggiornamenti giornalieri ai suoi sistemi. Fujitsu scelse di adottare la tecnologia cloud, così decise di effettuare una migrazione.\newline
+	
+	\noindent
+	\textbf{\emph{La realizzazione.}} Dopo il confronto di vari servizi cloud, Fujitsu scelse Azure di Microsoft. In particolare, scelse i prodotti: Azure High Priority e FastTrack. La migrazione, effettuata in pochi minuti, rese il sistema più scalabile, flessibile ed efficiente. Inoltre, Fujitsu poteva dare servizi correlati a Microsoft ai loro clienti. Caso completo: \href{https://customers.microsoft.com/en-GB/story/1533527200966057333-fujitsu-azure-partner-professional-services-business-critical}{case study}\newpage
+	
+	\subsection{Oracle: OCI}
+	
+	\subsubsection{Panoramica}
+	
+	L'azienda Oracle offre come servizio FaaS \href{https://www.oracle.com/cloud/cloud-native/functions/}{Oracle Cloud Infrastructure (OCI) Functions}. Il prezzo risulta essere, forse, simile a quello di Google. Si lascia comunque il link per approfondire: \url{https://www.oracle.com/cloud/costestimator.html}
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/Oracle-1.pdf}
+		\caption{Caso studio: Waste2Go. Streaming dei dati IoT mediante funzioni su Oracle Cloud Infrastructure (\href{https://docs.oracle.com/it/solutions/waste-two-go-on-oci/index.html}{link articolo}).}
+	\end{figure}\newpage
+	
+	\subsubsection{Caso studio}
+	
+	Tra le aziende di spessore che hanno lavorato con Oracle, si presenta qua di seguito Generali.\footnote{Link completo dell'articolo: \href{https://www.oracle.com/customers/generali/}{link}}\newline
+	
+	\noindent
+	Generali è la più grande compagnia di assicurazione italiana e òa terza per fatturato nel settore delle assicurazioni, dopo Allianz ed AXA.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/Generali-1.jpg}
+		\caption{Logo di Assicurazioni Generali.}
+	\end{figure}
+	
+	\noindent
+	\textbf{\emph{La sfida da superare.}} Generali possedeva più di 70'000 dipendenti e operava in oltre 50 paesi. È chiaro che il numero di dati era piuttosto elevate.
+	
+	Il dipartimento delle risorse umane compilava i \emph{template} dei dati manualmente e li inviava al team capo, così da eseguire \emph{reports} e analisi. È evidente che questo approccio richiedeva un consumo di tempo elevato ed era soggetto ad errori umani. L'obbiettivo era quello di trovare una soluzione che incrementasse la mentalità \emph{data-driven} e il reparto di risorse umane.\newline
+	
+	\noindent
+	\textbf{\emph{La realizzazione.}} Generali ha scelto i prodotti di Oracle come migliore opzione per migliorare le proprie performance grazie alla facile scalabilità e alle varie integrazioni. Il risultato è stato soddisfacente, poiché Generali ha automatizzato il processo di \emph{reporting} e ha consentito allo staff delle risorse umane di essere più produttivo e focalizzato sulle attività pertinenti. Inoltre, è stato implementato un meccanismo di Machine learning così da aumentare la produzione di report.\newpage
+	
+	\section{Esempio di applicazione: Azure Functions}
+	
+	\subsection{Introduzione: costruire API serverless con Azure Functions}
+	
+	Guida ufficiale: \href{https://learn.microsoft.com/en-gb/training/modules/build-api-azure-functions/}{link academy}\newline
+	
+	\noindent
+	Con Azure Functions	è possibile costruire rapidamente una API HTTP adatta alle applicazioni web. Il processo non prevede alcun web frameworks, quindi è molto semplice! Dato che Azure Functions è un servizio FaaS (Function-as-a-Service), il servizio risponderà ad un trigger HTTP solamente quando verrà invocato l'API. Quindi, finché l'API non viene utilizzata, eventuali costi del servizio non vengono addebitati. Questi vantaggi rendono Azure Functions un servizio molto richiesto dalle aziende.\newline
+	
+	\noindent
+	Gli obbiettivi in questo modulo sono:
+	\begin{itemize}
+		\item Costruire una API HTTP utilizzando l'estensione Azure Functions per Visual Studio Code.
+		
+		\item Imparare come modificare Azure Functions per renderlo \emph{RESTful}.
+		
+		\item Specificare chi può accedere alla API utilizzando CORS (\emph{Cross-Origin Resource Sharing}).
+	\end{itemize}
+	I prerequisiti sono semplicemente 5:
+	\begin{itemize}
+		\item Conoscenze base dei web services e concetti di API, incluso i metodi HTTP e REST;
+		
+		\item Conoscenza di Azure Functions, incluso gli HTTP Triggers;
+		
+		\item \href{https://code.visualstudio.com/}{Visual Studio Code} installato;
+		
+		\item \href{https://github.com/Azure/azure-functions-core-tools}{Azure Functions Core Tools} installato;
+		
+		\item \href{https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions}{Azure Functions} installato.
+	\end{itemize}\newpage
+	
+	\subsection{Creazione dell'environment}
+	
+	Una volta installati tutti i componenti necessari, si esegue quanto segue:
+	\begin{enumerate}
+		\item Apertura di Visual Studio Code;
+		
+		\item Sulla colonna di sinistra, cliccare sull'icona di Microsoft Azure ed eseguire il login
+		\begin{figure}[!htp]
+			\centering
+			\includegraphics[width=.4\textwidth]{img/azure-1.png}
+		\end{figure}
+		
+		\item Adesso si procede alla creazione di un nuovo progetto, quindi si apre la \emph{palette} di VSCode (Windows CTRL + SHIFT + P) e si digita \dquotes{\textsf{Azure Functions: Create New Project...}};
+		
+		\item Si seleziona la cartella in cui verrà salvato il progetto;
+		
+		\item Si seleziona il linguaggio di programmazione (nel nostro caso Python), le versione (3.10 nel nostro caso), il template che dovrà essere HTTP trigger per creare le API, il nome della funzione (potrà essere cambiato in futuro), poi si deve selezionare \dquotes{\textsf{Function}} e scegliere se aprirlo nella finestra corrente;
+		
+		\item Una volta creato l'ambiente, la schermata iniziale dovrebbe avere dei file con un codice d'esempio:
+		\begin{figure}[!htp]
+			\centering
+			\includegraphics[width=\linewidth]{img/azure-2.png}
+		\end{figure}
+	\end{enumerate}\newpage
+	
+	\subsection{Creazione delle API}
+	
+	L'attuale \emph{environment} non è caricato sul cloud! È solamente una versione di debug che viene utilizzata dagli sviluppatori per eseguire delle prove delle API sviluppate.\newline
+	
+	\noindent
+	Una possibile implementazione delle API è fatta nel seguente modo. Si crea una cartella, contenente del codice python, che rappresenta la pagina web che deve essere ritornata nel caso in cui venga richiamata quella determinata API. Quindi:
+	\begin{enumerate}
+		\item Si creano due cartelle: Somma e Sottrazione;
+		
+		\item Si copiano all'interno i file d'esempio che sono stati creati durante la creazione dell'\emph{environment}, quindi:
+		\begin{itemize}
+			\item \textsf{\_\_init\_\_.py}
+			
+			\item \textsf{function.json}
+			
+			\item \textsf{sample.dat}
+		\end{itemize}
+		
+		\item Si modificano i file \textsf{function.json} e si aggiunge:
+		\begin{itemize}
+			\item Nella cartella Somma, il file deve essere modificato aggiungendo sotto il parametro \textsf{methods}, il parametro \textsf{"route": "calcola-somma"}
+			\item Nella cartella Sottrazione, il file deve essere modificato aggiungendo sotto il parametro \textsf{methods}, il parametro \textsf{"route": "calcola-sottrazione"}
+		\end{itemize}
+		Così facendo, le API potranno essere raggiunte tramite i links:
+		\begin{itemize}
+			\item \url{localhost:7000/api/calcola-somma}
+			\item \url{localhost:7000/api/calcola-differenza}
+		\end{itemize}
+		
+		\item Adesso è necessario modificare i files python. L'implementazione della differenza si lascia al lettore, ricordando che la variabile \textsf{req\_body} contiene un dizionario del file json che viene passato durante l'invocazione della API. Quindi, scrivendo \textsf{req\_body["name\_val\_inside\_json"]} è possibile acquisire il valore corrispondente.
+		\lstinputlisting[language=python]{code/azure.py}\newpage
+		
+		\noindent
+		Dove \dquotes{\textsf{val1}} e \dquotes{\textsf{val2}} sono valori dichiarati all'interno del JSON allegato al pacchetto di richiesta inviato al server.
+		
+		La cartella alla fine dovrebbe avere questi file:
+		\begin{figure}[!htp]
+			\centering
+			\includegraphics[width=.4\textwidth]{img/azure-3.png}
+		\end{figure}
+	\end{enumerate}
+	Si lascia qua di seguito il link alla documentazione ufficiale delle classe \textsf{HttpRequest}: \href{https://learn.microsoft.com/en-us/python/api/azure-functions/azure.functions.httprequest?view=azure-python}{official documentation}.
+	\newpage
+	
+	\subsection{Esecuzione delle API in locale}
+	
+	Per verificare se la procedura è andata a buon fine, si prova ad eseguire Azure Functions:
+	\begin{enumerate}
+		\item Si apre la \emph{palette} di Visual Studio Code;
+		
+		\item Si scrive il seguente comando: \dquotes{\textsf{Debug: Select and Start Debugging}};
+		
+		\item Nella schermata successiva, si conferma cliccando su \dquotes{\textsf{Attach to Python Functions}};
+		
+		\item A questo punto, si dovrebbe aprire il terminale integrato e dovrebbero essere visibili tutte le API implementate:
+		\begin{figure}[!htp]
+			\centering
+			\includegraphics[width=\textwidth]{img/azure-4.png}
+		\end{figure}
+		
+		\item Aprendo la pagina web, la schermata dovrebbe restituire un errore poiché i valori devono essere passati nel body come JSON. Per farlo, si utilizza il software \href{https://www.postman.com/}{Postman}. Si invia una richiesta GET/POST ad una delle due API, ricordandosi di inserire nel body il JSON:
+		\begin{lstlisting}
+{
+	"val1": 5,
+	"val2": 6
+}\end{lstlisting}
+		La risposta sarà una pagina web contente il risultato.
+	\end{enumerate}\newpage
+	
+	\subsection{Creare una vera e propria API con Azure}
+	
+	Dopo aver sviluppato le API nei capitoli precedenti, è possibile mandare in produzione (\emph{Deploy}) un'applicazione e affiancare le API:
+	\begin{enumerate}
+		\item Aprendo il progetto precedente e andando sull'estensione di Azure Functions, nell'area Resources è possibile cliccare con il destro sopra Function App e creare un'applicazione;
+		
+		\item Dopo la creazione, che necessita di qualche minuto, sarà possibile cliccare su \textsf{Deploy...} nell'area Workspace e collegare le API all'applicazione creata;
+		
+		\item Una volta che l'applicazione sarà UP (online), sarà possibile ottenere il link per l'API andando sulla dashboard online di Azure e cercando le funzioni implementate.
+	\end{enumerate}
+\end{document}
