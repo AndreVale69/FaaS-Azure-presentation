@@ -1,0 +1,166 @@
+\documentclass{beamer}
+\usepackage[italian]{isodate}  		% formato delle date in italiano
+\usepackage[italian]{babel}
+\usepackage{booktabs}				% tabelle di qualità superiore
+\usepackage{amsmath}				% pacchetto matematica
+\usepackage{pifont}					% pacchetto con elenchi carini
+\usepackage{caption}				% pacchetto per gestiore \caption
+\usepackage{ragged2e}				% pacchetto per \justifying
+
+\newcommand{\longline}{\noindent\rule{\textwidth}{0.4pt}}
+\newcommand{\dquotes}[1]{``#1''}
+
+% Informations:
+\usetheme{Marburg}
+\usefonttheme{serif}
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{footline}[frame number]
+\setbeamertemplate{navigation symbols}{}%remove navigation symbols
+
+\title{Tesina su FaaS (Function-as-a-Service)}
+\author{VR443470 - Valentini Andrea}
+\institute{Università degli studi di Verona}
+\date{\printdayoff\today}
+\titlegraphic{
+	\includegraphics[width=.6\textwidth]{img/faas-1.jpg}
+}
+\apptocmd{\frame}{}{\justifying}{} % Allow optional arguments after frame.
+
+
+\begin{document}
+	
+	% Title
+	\begin{frame}
+		\titlepage
+	\end{frame}
+	
+	% Index
+	\begin{frame}
+		\frametitle{Contenuti}
+		\tableofcontents
+	\end{frame}
+	
+	\section{Introduzione}
+	\begin{frame}
+		\frametitle{Introduzione}
+		\framesubtitle{La crescita esponenziale dei servizi cloud}
+		Con l'avanzare della tecnologia, il \emph{cloud computing} è diventato un servizio sempre più richiesto. La sua crescita è stata influenzata anche dalla pandemia mondiale COVID-19.
+		\begin{figure}
+			\includegraphics[width=.7\textwidth]{img/satya-nadella-microsoft-mod.jpg}
+			\caption*{\dquotes{\emph{Abbiamo assistito a due anni di trasformazione digitale in due mesi}}\newline
+			$\sim$ Satya Nadella, CEO Microsoft\footnote{\href{https://www.microsoft.com/en-us/microsoft-365/blog/2020/04/30/2-years-digital-transformation-2-months/}{Link dell'articolo}}}
+		\end{figure}
+	\end{frame}
+	
+	\subsection{Che cos'è FaaS?}
+	\begin{frame}
+		\frametitle{Che cos'è FaaS?}
+		\framesubtitle{Definizione}
+		\alert{FaaS} (\emph{Function-as-a-Service}) è una tipologia di servizio \emph{cloud computing} che consente ai programmatori di:
+		%\setbeamercovered{transparent}
+		\begin{itemize}
+			\item sviluppare,
+			\item eseguire,
+			\item gestire
+		\end{itemize}
+		pacchetti di applicazioni come se fossero \textbf{funzioni} (in gergo \emph{functions}), senza preoccuparsi della manutenzione di un'infrastruttura.
+	\end{frame}
+	
+	\subsection{FaaS e Serverless}
+	\begin{frame}
+		\frametitle{FaaS e Serverless}
+		\framesubtitle{Differenze}
+		\textbf{FaaS}:
+		\begin{itemize}
+			\item<2-7> Tipologia di servizio
+			\item<4-7> Difficilmente utilizzato da solo
+			\item<6-7> Basato sul paradigma \emph{event-driven}
+		\end{itemize}
+
+		\textbf{Serverless}:
+		\begin{itemize}
+			\item<3-7> Modello contenente più servizi 
+			\item<5-7> Utilizzato dalle aziende
+			\item<7> Dipende dai servizi utilizzati (event-driven, stream-processing con Apache Kafka, etc)
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{FaaS e Serverless}
+		\framesubtitle{Differenze}
+		\begin{figure}
+			\includegraphics[width=.9\textwidth]{img/AWS-Serverless-1.pdf}
+			\caption*{Esempi dei vari servizi \emph{serverless} offerti da Amazon.}
+		\end{figure}
+	\end{frame}
+	
+	\section{Architettura FaaS: Microsoft Azure Functions}
+	\begin{frame}
+		\frametitle{Architettura FaaS: Microsoft Azure Functions}
+		\framesubtitle{Introduzione}
+		Si presentano vari \emph{designing applications} realizzate con Azure che hanno la caratteristica di essere:
+		\begin{itemize}
+			\item Scalabili
+			\item Sicure
+			\item Altamente disponibili
+		\end{itemize}
+		\begin{figure}
+			\centering
+			\includegraphics[width=.8\textwidth]{img/azure-functions-cover.png}
+		\end{figure}
+	\end{frame}
+	
+	\subsection{Azure Functions in un ambiente ibrido}
+	\begin{frame}
+		\frametitle{Azure Functions in un ambiente ibrido}
+		\begin{figure}
+			\includegraphics[width=\textwidth]{img/azure-functions-hybrid.pdf}
+		\end{figure}
+	\end{frame}
+	
+	\subsection{Automatizzazione cloud \emph{event-based}}
+	\begin{frame}
+		\frametitle{Automatizzazione cloud \emph{event-based}}
+		\begin{figure}
+			\includegraphics[width=\textwidth]{img/cloud-automation.png}
+		\end{figure}
+	\end{frame}
+	
+	\subsection{Soluzioni Multicloud con Framework Serverless}
+	\begin{frame}
+		\frametitle{Soluzioni Multicloud con Framework Serverless}
+		\begin{figure}
+			\includegraphics[width=\textwidth]{img/multi-cloud-serverless-architecture.pdf}
+		\end{figure}
+	\end{frame}
+	
+	\subsection{Condivisione della posizione in tempo reale}
+	\begin{frame}
+		\frametitle{Condivisione della posizione in tempo reale}
+		\begin{figure}
+			\includegraphics[width=\textwidth]{img/archdiagram.pdf}
+		\end{figure}
+	\end{frame}
+	
+	\subsection{Serverless event processing}
+	\begin{frame}
+		\frametitle{Serverless event processing}
+		\begin{figure}
+			\includegraphics[width=\textwidth]{img/serverless-event-processing.png}
+		\end{figure}
+	\end{frame}
+	
+	\section{Esempi di applicazione su Azure}
+	\begin{frame}
+		\frametitle{Esempi di applicazione su Azure}
+		\begin{enumerate}
+			\item Sviluppo progetto API in locale;
+			
+			\item Creazione e sviluppo (\emph{deploy}) delle API create;
+			
+			\item Tour rapido sulla piattaforma cloud Azure;
+			
+			\item Test delle API create su un server reale.
+		\end{enumerate}
+	\end{frame}
+\end{document}
