@@ -144,6 +144,101 @@
 	
 	Il modello Function-as-a-Service può essere considerato la tecnologia più centrale nell'architettura \emph{serverless}. In altre parole è il cuore pulsante. FaaS è focalizzato sul paradigma \emph{event-driven} (orientato agli eventi), dove il codice dell'applicazione, o del \emph{container}, viene eseguito solo in risposta a determinati eventi o richieste.\newpage
 	
+	\section{Architettura Function-as-a-Service: Azure Functions}
+	
+	Questo capitolo presenta una serie di \emph{designing applications} realizzate sulla piattaforma Azure che sono scalabili, sicure, resilienti, e altamente disponibili. In particolare, le seguenti architetture sono tutte \emph{serverless}. Questa tipologia consente di rendere astratto il codice dall'infrastruttura in cui viene eseguito. In questa architettura, Azure Functions è sempre implementata e per questo motivo viene detta \emph{event-driven}.
+	
+	\longline
+	
+	\subsection{Azure Functions in un ambiente ibrido}
+	
+	Questo paragrafo\footnote{Fonte: \href{https://learn.microsoft.com/en-us/azure/architecture/hybrid/azure-functions-hybrid}{Microsoft}} illustra un'architettura con molteplici rami (\emph{branches}, o server) locali di un'organizzazione che è sparsa geograficamente in tutto il mondo. Ogni posto utilizza un App Microsoft Azure Function che è collegata al server più vicino a quella regione. Gli sviluppatori monitorano tutte le applicazioni Azure Function utilizzando Azure Monitor.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/azure-functions-hybrid.pdf}
+		\caption{\emph{Azure Functions in a hybrid environment.}}
+	\end{figure}
+	Si noti bene che ogni sviluppatore lavora in locale (\emph{on-premises network}) così da eseguire tutte le verifiche del caso e solo successivamente viene caricato tramite Azure.\newpage
+	
+	\subsection{Automatizzazione cloud \emph{event-based}}
+	
+	Questo paragrafo\footnote{Fonte: \href{https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/serverless/cloud-automation}{Microsoft}} illustra un'automatizzazione del flusso di lavoro e di alcuni compiti ripetitivi sul cloud, grazie alle tecnologie \emph{serverless}.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/cloud-automation.png}
+		\caption{\emph{Event-based cloud automation.}}
+	\end{figure}
+	
+	\noindent
+	Gli scenari rappresentati sono due:
+	\begin{enumerate}
+		\item \textbf{Etichettatura dei centri di costo} (\emph{Cost center tagging}). Questa implementazione consente di monitorare i costi di ogni risorsa Azure:
+		\begin{itemize}
+			\item L'evento Grid (\textbf{Azure Event Grid}) monitora gli eventi di creazione di risorse e nel caso di cambiamenti, invoca una Azure Function;
+			
+			\item Un'applicazione (\textbf{Logic App}) invia una email al proprietario della risorsa nel caso venga cambiato il tag della risorsa;
+			
+			\item Nel frattempo, \textbf{Azure Functions} interagisce con \textbf{Azure Active Directory} tramite chiamate REST per effettuare controlli e aggiornamenti.
+		\end{itemize}
+		
+		\item \textbf{\emph{Throttling response}}. Questo implementazione monitora un database Azure Cosmos DB per riscontrare eventuali \emph{throttling} (strozzature):
+		\begin{itemize}
+			\item \textbf{Azure Monitor alerts} viene \emph{triggerato} quando le richieste di accesso ai dati del database eccedono la capacità di unità di richiesta, RUs (\emph{Request Units});
+			
+			\item \textbf{Azure Monitor action group} è configurato per \emph{triggerare} la funzione automatizza (Azure Function) per rispondere a questi tipi di allarmi;
+			
+			\item \textbf{Azure Function} scala il limite della Request Units ad un valore più alto, aumentando così la capacità e a sua volta fermando l'allarme.
+		\end{itemize}
+	\end{enumerate}\newpage
+	
+	\subsection{Soluzioni Multicloud con Framework Serverless}
+	
+	Questo paragrafo\footnote{Fonte: \href{https://learn.microsoft.com/en-us/azure/architecture/example-scenario/serverless/serverless-multicloud}{Microsoft}} illustra come il team di Microsoft Commercial Software Engineering (CSE) ha collaborato con un venditore al dettaglio globale, per sviluppare un'architettura \emph{serverless} ad alta disponibilità utilizzando due piattaforme, Amazon Web Services e Azure, grazie al Framework Serverless sviluppato dall'omonima azienda (\href{https://www.serverless.com/about}{Serverless Inc.}).
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/multi-cloud-serverless-architecture.pdf}
+		\caption{\emph{Multicloud solutions with the Serverless Framework.}}
+	\end{figure}
+	
+	\noindent
+	Gli utenti possono provenire da qualsiasi risorsa in grado di accedere al cloud. In questa implementazione, gli utenti si registrano in un'app \emph{gateway} che suddivide il carico delle richieste a metà: 50\% nell'architettura Azure e 50\% nell'architettura Amazon Web Services Cloud. Inoltre, ogni risposta passa attraverso un API Manager \emph{gateway}, il quale la invia all'applicazione richiedente.\newpage
+	
+	\subsection{Condivisione della posizione in tempo reale usando un servizio Azure serverless low-cost}
+	
+	Questo paragrafo\footnote{Fonte: \href{https://learn.microsoft.com/en-us/azure/architecture/example-scenario/signalr/}{Microsoft}} illustra come organizzare una soluzione che elabora modifiche per una visualizzazione web, senza il bisogno di ricaricare la pagina, utilizzando servizi \emph{real-time}.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/archdiagram.pdf}
+		\caption{\emph{Share a location in real time by using low-cost serverless Azure services.}}
+	\end{figure}
+	
+	\begin{itemize}
+		\item \textbf{Azure Service Bus} è un servizio di messaggistica cloud altamente affidabile, che si trova tra le applicazioni e i servizi. Riesce a funzionare anche quando uno o più componenti sono offline;
+		
+		\item \textbf{Azure SignalR Service} è un servizio che rendere semplice aggiungere comunicazioni in tempo reale ad una web app;
+		
+		\item \textbf{Azure Functions}, modello FaaS.
+	\end{itemize}\newpage
+	
+	\subsection{Serverless event processing}
+	
+	Questo paragrafo\footnote{Fonte: \href{https://learn.microsoft.com/en-us/azure/architecture/reference-architectures/serverless/event-processing}{Microsoft}} illustra un'architettura che acquisisce uno stream di dati, li processa, e li scrive come risultato in un \emph{back-end database}.
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/serverless-event-processing.png}
+		\caption{\emph{Serverless event processing.}}
+	\end{figure}
+	
+	\begin{enumerate}
+		\item Gli eventi arrivano alla componente Azure Event Hubs che è programmato per sopportare alti livelli di portata di streaming di dati;
+		
+		\item Una Function App (Azure Functions) viene \emph{triggerata} per gestire l'evento;
+		
+		\item L'evento viene salvato in un database Azure Cosmos DB;
+		
+		\item Se la Function App fallisce il salvataggio dell'evento, allora esso viene salvato in una \emph{Storage queue} per essere processato in futuro.
+	\end{enumerate}\newpage
+	
 	\section{Aziende che offrono un servizio FaaS}
 	
 	\subsection{IBM: cloud functions}
