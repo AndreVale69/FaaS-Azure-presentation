@@ -585,5 +585,142 @@
 		\item Dopo la creazione, che necessita di qualche minuto, sarà possibile cliccare su \textsf{Deploy...} nell'area Workspace e collegare le API all'applicazione creata;
 		
 		\item Una volta che l'applicazione sarà UP (online), sarà possibile ottenere il link per l'API andando sulla dashboard online di Azure e cercando le funzioni implementate.
+	\end{enumerate}\newpage
+	
+	\section{Azure Functions opzioni di hosting}
+	
+	\subsection{Introduzione}
+	
+	Quando viene creata una app in Azure, è necessario scegliere un piano di \emph{hosting}. È possibile sceglierne 3:
+	\begin{enumerate}
+		\item Piano di consumo (consumption plan), \href{https://learn.microsoft.com/en-gb/azure/azure-functions/consumption-plan}{fonte ufficiale}
+		
+		\item Piano premium (premium plan), \href{https://learn.microsoft.com/en-gb/azure/azure-functions/functions-premium-plan}{fonte ufficiale}
+		
+		\item Piano dedicato (dedicated app service plan), \href{https://learn.microsoft.com/en-gb/azure/azure-functions/dedicated-plan}{fonte ufficiale}
 	\end{enumerate}
+	I piani \textbf{influenzano} tre comportamenti nelle applicazioni che vengono sviluppate:
+	\begin{itemize}
+		\item La scalabilità dell'applicazione;
+		
+		\item Le risorse disponibili per ogni istanza delle funzioni dell'app;
+		
+		\item Supporto per funzionalità avanzate, come la connettività AVN (Azure Virtual Network).
+	\end{itemize}
+	
+	\longline
+	
+	\subsection{Panoramica dei piani}
+	
+	\subsubsection{Piano di consumo - \emph{Consumption plan}}
+	
+	Il costo si riferisce solo alle risorse in funzionamento, ovvero quando le funzioni sono in esecuzione. In particolare, le \textbf{istanze} delle funzioni sono \textbf{aggiunte e rimosse dinamicamente in base al numero di eventi in entrata}\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/consumption-plan}{Fonte}}.
+	
+	\begin{itemize}[label=\ding{51}]
+		\item Piano di hosting di default;
+		
+		\item Si paga solo quando le funzioni sono in esecuzione;
+		
+		\item Scalabilità automatica, quindi le istanze vengono aggiunte e rimosse dinamicamente.
+	\end{itemize}
+	
+	Queste caratteristiche è possibile visualizzarle andando sull'App creata, scheda \dquotes{Impostazioni} e successivamente \dquotes{Aumenta istanze}. Qui è possibile imporre il numero massimo di istanze.\newpage
+	
+	\subsubsection{Piano premium - \emph{Premium plan}}
+	
+	Ha le stesse caratteristiche di un \emph{consumption plan}, ma vengono aggiunte alcune caratteristiche che consentono una maggiore efficienza\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/functions-premium-plan}{Fonte}}.\newline
+	
+	\noindent
+	L'\textbf{eliminazione delle \emph{cold starts}}. Nel \emph{consumption plan}, quando non vi sono eventi o esecuzioni in corso, l'applicazione ha zero istanze assegnate; nel momento in cui arriva un evento in entrata, una nuova istanza viene allocata. L'allocazione potrebbe non essere immediata, poiché dipende dall'applicazione. Questo ritardo viene chiamato \emph{cold start}.
+	
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/cold-start.pdf}
+		\caption{Definizione grafica di \emph{cold start}.}
+	\end{figure}
+	
+	\noindent
+	Il \emph{premium plan} fornisce due caratteristiche per \textbf{combattere questo ritardo}:
+	\begin{itemize}
+		\item Istanze sempre pronte (\emph{always ready instances}), è un numero di istanze pre-allocate;
+		
+		\item Istanze pre-riscaldate (\emph{pre-warmed istances}), un buffer che scala a seconda degli eventi HTTP.
+	\end{itemize}
+	Quindi, quando un evento viene \emph{triggerato} dall'app, esso viene indirizzato verso le istanze sempre pronte. Come la funzione viene attivata a causa degli eventi HTTP, delle istanze aggiuntive verranno riscaldate come una sorta di buffer.\newpage
+	
+	\begin{figure}[!htp]
+		\centering
+		\includegraphics[width=\textwidth]{img/scale-out.png}
+		\caption{Pannello di controllo di Microsoft Azure Online.}
+	\end{figure}
+	
+	\noindent
+	Il \textbf{Maximum Burst} è una soglia che consente di limitare la crescita dell'allocazione delle istanze, oltre alle \emph{always ready istances}. Quindi, quando l'app richiede istanze oltre il numero di istanze sempre pronte, è possibile scalare il numero di istanze finché non viene raggiunto il limite \emph{maximum burst}.
+	
+	\longline
+	
+	\subsubsection{Piano dedicato - Dedicated app service plan}
+	
+	Piano dedicato a quelle applicazioni che hanno necessità di essere eseguite per lunghi periodi di tempo\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/dedicated-plan}{Fonte}}.
+	
+	\begin{itemize}[label=\ding{51}]
+		\item Macchine virtuali a disposizione in cui vi è già in esecuzione le istanze dell'applicazione;
+		
+		\item È richiesta una previsione del traffico e dei costi.
+	\end{itemize}\newpage
+	
+	\subsection{Panoramica delle opzioni di hosting}
+	
+	\subsubsection{ASE - \emph{App Service Environment}}
+	
+	App Service Environment è una caratteristica che consente una isolazione completa e dedicata dell'ambiente (\emph{environment}) così da avere un'esecuzione sicura dell'applicazione in grande scala\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/dedicated-plan}{Fonte}}.\newline
+	
+	\noindent
+	Questa opzione è adatta a quelle applicazioni che hanno bisogno di:
+	\begin{itemize}[label=\ding{51}]
+		\item Esecuzione in grande scala;
+		
+		\item Computazione completamente isolata e accesso alla rete sicura;
+		
+		\item Alto livello di utilizzo della memoria.
+	\end{itemize}
+	
+	\longline
+	
+	\subsubsection{Azure Container Apps}
+	
+	Azure Container Apps è un ambiente completamente controllabile che consente di eseguire microservizi e containerizzare applicazioni su una piattaforma serverless\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/functions-container-apps-hosting}{Fonte}}. Inoltre, questa opzione di hosting consente di eseguire le funzioni dell'applicazione con la potenza di calcolo di AKS (Azure Kubernetes Service) che non è altro che un servizio nato per semplificare il lavoro con le APIs di Kubernetes.
+	
+	\longline
+	
+	\subsubsection{Kubernetes}
+	
+	Kubernetes consente di avere un ambiente completamente isolato e dedicato, in esecuzione sulle piattaforme Kubernetes di Microsoft: Direct o Azure Arc\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/functions-scale}{Fonte}}. Questa opzione di hosting viene utilizzata quando le applicazioni necessitano di:
+	\begin{itemize}[label=\ding{51}]
+		\item Requisiti hardware personalizzati;
+		
+		\item Accesso isolato e sicuro alla rete;
+		
+		\item Possibilità di eseguire l'ambiente in modalità ibrida o multi-cloud;
+		
+		\item Possibilità di eseguire a fianco ad applicazioni e servizi Kubernetes esistenti.
+	\end{itemize}\newpage
+	
+	\subsection{Limiti dei piani e delle opzioni di hosting}
+	
+	La seguente tabella espone i limiti dei vari piani e opzioni di hosting\footnote{\href{https://learn.microsoft.com/en-gb/azure/azure-functions/functions-scale}{Fonte}}. Viene indicato sulla sinistra il nome del piano, al centro il \dquotes{quando e come vengono scalate le istanze}, a destra il numero massimo di istanze creabili:
+	\begin{table}[!htp]
+		\centering
+		\begin{tabular}{@{} l p{15em} p{9em} @{}}
+			\toprule
+			Piano & Ridimensionamento & Max \# istanze \\
+			\midrule
+			Consumption plan & Automatico a seconda dell'evento, ovvero orientato agli eventi (\emph{event driven}) & Windows: 200;\newline Linux: 100 \\ 
+			Premium plan & Automatico a seconda dell'evento, ovvero orientato agli eventi (\emph{event driven}) & Widnows: 100;\newline Linux: 20-100 \\
+			Dedicated plan & Manuale o automatico & 10-30 \\
+			ASE & Manuale o automatico & 100 \\
+			Kubernetes & Orientato agli eventi usando \href{https://keda.sh/}{KEDA}, ovvero un Kubernetes-based event driven autoscaler & Variabile a seconda dei cluster. \\
+			\bottomrule
+		\end{tabular}
+	\end{table}
 \end{document}
